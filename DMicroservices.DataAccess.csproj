@@ -4,7 +4,8 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Authors>Serhat Boyraz</Authors>
     <Company>Detaysoft</Company>
-    <RepositoryUrl>https://github.com/serhatboyraz/dotnet-microservices</RepositoryUrl>
+    <RepositoryUrl>https://github.com/serhatboyraz/dmicroservices-dataaccess</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
