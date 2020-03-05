@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using DMicroservices.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -48,6 +49,11 @@ namespace DMicroservices.DataAccess.Repository
             return DbContext;
         }
 
+        public List<string> GetIncludePaths()
+        {
+            return DbContext.GetIncludePaths(typeof(T)).ToList();
+        }
+
         public int Count()
         {
             throw new NotImplementedException();
@@ -88,6 +94,13 @@ namespace DMicroservices.DataAccess.Repository
             return iQueryable.ToList().FirstOrDefault();
         }
 
+        public T Get(Expression<Func<T, bool>> predicate, List<string> includePaths)
+        {
+            IQueryable<T> iQueryable = DbSet
+                .Where(predicate).Include(includePaths);
+            return iQueryable.ToList().FirstOrDefault();
+        }
+
         public IQueryable<T> GetAll()
         {
             IQueryable<T> iQueryable = DbSet.Where(x => x != null);
@@ -97,7 +110,14 @@ namespace DMicroservices.DataAccess.Repository
         public IQueryable<T> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
         {
             IQueryable<T> iQueryable = DbSet
-               .Where(predicate);
+                .Where(predicate);
+            return iQueryable;
+        }
+
+        public IQueryable<T> GetAll(System.Linq.Expressions.Expression<Func<T, bool>> predicate, List<string> includePaths)
+        {
+            IQueryable<T> iQueryable = DbSet
+                .Where(predicate).Include(includePaths);
             return iQueryable;
         }
 

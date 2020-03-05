@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 
 namespace DMicroservices.DataAccess.Repository
 {
@@ -20,6 +20,14 @@ namespace DMicroservices.DataAccess.Repository
         /// <param name="predicate"></param>
         /// <returns></returns>
         IQueryable<T> GetAll(Expression<Func<T, bool>> predicate);
+
+        /// <summary>
+        /// Veriyi Where metodu ile getir.
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="includePaths"></param>
+        /// <returns></returns>
+        IQueryable<T> GetAll(Expression<Func<T, bool>> predicate, List<string> includePaths);
 
         /// <summary>
         /// Verilen sorguya göre tablodaki sayıyı gönderir.
@@ -42,13 +50,19 @@ namespace DMicroservices.DataAccess.Repository
         T Get(Expression<Func<T, bool>> predicate);
 
         /// <summary>
+        /// İstenilen veriyi single olarak getirir.
+        /// </summary>
+        /// <returns></returns>
+        T Get(Expression<Func<T, bool>> predicate, List<string> includePaths);
+
+        /// <summary>
         /// Getirilen veri üzerinde veri gelmeden kolonları seç.
         /// </summary>
         /// <param name="where">Veri kısıtlamaları</param>
         /// <param name="select">Seçilecek kolonlar</param>
         /// <returns></returns>
         IQueryable<dynamic> SelectList(Expression<Func<T, bool>> @where, Expression<Func<T, dynamic>> @select);
-        
+
         /// <summary>
         /// Entity ile sql sorgusu göndermek için kullanılır.
         /// </summary>
@@ -101,6 +115,8 @@ namespace DMicroservices.DataAccess.Repository
         /// </summary> 
         /// <returns></returns>
         DbContext GetDbContext();
+
+        List<string> GetIncludePaths();
 
 
 
