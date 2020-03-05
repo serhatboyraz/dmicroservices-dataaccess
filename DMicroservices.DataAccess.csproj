@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -6,11 +6,12 @@
     <Company>Detaysoft</Company>
     <RepositoryUrl>https://github.com/serhatboyraz/dmicroservices-dataaccess</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMicroservices.Utils" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
+    <PackageReference Include="DMicroservices.Utils" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
 </Project>
