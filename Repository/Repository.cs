@@ -56,7 +56,7 @@ namespace DMicroservices.DataAccess.Repository
 
         public int Count()
         {
-            throw new NotImplementedException();
+            return Count(arg => true);
         }
 
         public int Count(Expression<Func<T, bool>> predicate)
