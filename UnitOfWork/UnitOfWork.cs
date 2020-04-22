@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Transactions;
 using DMicroservices.DataAccess.Repository;
+using DMicroservices.Utils.Logger;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace DMicroservices.DataAccess.UnitOfWork
 {
@@ -72,20 +74,19 @@ namespace DMicroservices.DataAccess.UnitOfWork
         /// <returns></returns>
         public int SaveChanges()
         {
+            int result = -1;
             try
             {
-                int result = 0;
                 using (TransactionScope tScope = new TransactionScope())
                 {
                     result = DbContext.SaveChanges();
                     tScope.Complete();
                 }
-                return result;
             }
             catch (ValidationException ex)
             {
                 string errorString = ex.Message;
-                return -1;
+                ErrorMessageList.Add(errorString);
             }
             catch (DbUpdateException ex)
             {
@@ -96,20 +97,24 @@ namespace DMicroservices.DataAccess.UnitOfWork
                     if (ex.InnerException.InnerException != null)
                     {
                         errorString += ex.InnerException.InnerException.Message;
-                        ErrorMessageList.Add(ex.InnerException.InnerException.Message);
-                    }
-                    else
-                    {
-                        ErrorMessageList.Add(ex.InnerException.Message);
                     }
                 }
-                return -1;
+
+                ErrorMessageList.Add(errorString);
             }
             catch (Exception ex)
             {
                 ErrorMessageList.Add(ex.Message);
-                return -1;
             }
+            finally
+            {
+                if (result == -1)
+                {
+                    ElasticLogger.Instance.Info(
+                        $"UnitOfWork Save Error. Type : {typeof(T).Name} Error Messages : {JsonConvert.SerializeObject(ErrorMessageList)}");
+                }
+            }
+            return result;
         }
 
         #endregion

@@ -6,11 +6,11 @@
     <Company>Detaysoft</Company>
     <RepositoryUrl>https://github.com/serhatboyraz/dmicroservices-dataaccess</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMicroservices.Utils" Version="1.0.3" />
+    <PackageReference Include="DMicroservices.Utils" Version="1.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
