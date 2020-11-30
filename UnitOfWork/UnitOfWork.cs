@@ -16,7 +16,9 @@ namespace DMicroservices.DataAccess.UnitOfWork
 
         private DbContext dbContext;
         private bool disposed = false;
-
+        private bool filteredRepository = false;
+        public string FilterColumnName { get; set; }
+        public object FilterColumnValue { get; set; }
         /// <summary>
         /// İşlemlerde hata oluşusa bu liste doldurulur.
         /// </summary>
@@ -54,6 +56,16 @@ namespace DMicroservices.DataAccess.UnitOfWork
 
         }
 
+        /// <summary>
+        /// UnitOfWork başlangıcı 
+        /// </summary>
+        public UnitOfWork(string filterPropertyName, object filterPropertyValue)
+        {
+            filteredRepository = true;
+            FilterColumnName = filterPropertyName;
+            FilterColumnValue = filterPropertyValue;
+        }
+
         #endregion
 
         #region IUnitOfWork Members
@@ -65,6 +77,9 @@ namespace DMicroservices.DataAccess.UnitOfWork
         /// <returns>Tür nesnesi ile ilgili Repository</returns>
         public IRepository<T> GetRepository<T>() where T : class
         {
+            if (filteredRepository)
+                return new FilteredRepository<T>(DbContext, FilterColumnName, FilterColumnValue);
+
             return new Repository<T>(DbContext);
         }
 

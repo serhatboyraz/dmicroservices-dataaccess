@@ -10,6 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DMicroservices.DataAccess.Tests\**" />
+    <EmbeddedResource Remove="DMicroservices.DataAccess.Tests\**" />
+    <None Remove="DMicroservices.DataAccess.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DMicroservices.Utils" Version="1.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
     <PackageReference Include="MongoDB.Bson" Version="2.11.4" />

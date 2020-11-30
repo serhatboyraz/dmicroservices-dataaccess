@@ -12,23 +12,25 @@ namespace DMicroservices.DataAccess.Tests
     {
         static void Main(string[] args)
         {
-            using (UnitOfWork<MasterContext> uow = new UnitOfWork<MasterContext>())
+            using (UnitOfWork<MasterContext> uow = new UnitOfWork<MasterContext>("Id",long.Parse("1")))
             {
                 var repo = uow.GetRepository<ClassModel>();
-                var repoSt = uow.GetRepository<StudentModel>();
-
+                var yy = repo.GetAll(x => true).ToList();
                 
-                repo.Add(new ClassModel()
-                {
-                    Id = 2,
-                    Name = "test2"
-                });
+                var repoSt = uow.GetRepository<StudentModel>();
+                var yy1 = repoSt.GetAll(x => true).ToList();
 
-                repo.Add(new ClassModel()
-                {
-                    Id = 1,
-                    Name = "tes2"
-                });
+                //repo.Add(new ClassModel()
+                //{
+                //    Id = 2,
+                //    Name = "test2"
+                //});
+
+                //repo.Add(new ClassModel()
+                //{
+                //    Id = 1,
+                //    Name = "tes2"
+                //});
                 uow.SaveChanges();
 
             }
