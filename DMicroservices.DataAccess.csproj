@@ -12,6 +12,8 @@
   <ItemGroup>
     <PackageReference Include="DMicroservices.Utils" Version="1.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="MongoDB.Bson" Version="2.11.4" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
   </ItemGroup>
 
 </Project>
