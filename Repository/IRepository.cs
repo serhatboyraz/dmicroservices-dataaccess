@@ -77,6 +77,12 @@ namespace DMicroservices.DataAccess.Repository
         void Add(T entity);
 
         /// <summary>
+        /// Verilen entityi ekle.
+        /// </summary>
+        /// <param name="entityList"></param>
+        void BulkInsert(List<T> entityList);
+
+        /// <summary>
         /// Verilen entity i güncelle.
         /// </summary>
         /// <param name="entity"></param>

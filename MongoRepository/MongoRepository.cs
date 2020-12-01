@@ -121,9 +121,22 @@ namespace DMicroservices.DataAccess.MongoRepository
             }
             set { database = value; }
         }
-
         public MongoRepository()
         {
+            Database = GetDatabase(DatabaseSettings);
+            if (Database.GetCollection<T>(typeof(T).Name) == null)
+            {
+                Database.CreateCollection(typeof(T).Name);
+            }
+
+            CurrentCollection = GetCollection(DatabaseSettings);
+        }
+
+
+        public MongoRepository(DatabaseSettings dbSettings)
+        {
+            DatabaseSettings = dbSettings;
+
             Database = GetDatabase(DatabaseSettings);
             if (Database.GetCollection<T>(typeof(T).Name) == null)
             {

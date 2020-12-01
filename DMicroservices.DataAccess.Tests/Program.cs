@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using DMicroservices.DataAccess.MongoRepository;
+using DMicroservices.DataAccess.MongoRepository.Settings;
 using DMicroservices.DataAccess.Tests.Models;
 using DMicroservices.DataAccess.UnitOfWork;
 using DMicroservices.Utils.Extensions;
@@ -12,6 +14,18 @@ namespace DMicroservices.DataAccess.Tests
     {
         static void Main(string[] args)
         {
+            using (MongoRepository<ClassModel> mongoRepo = new MongoRepository<ClassModel>(new DatabaseSettings()
+            {
+                
+            }))
+            {
+                mongoRepo.Add(new ClassModel()
+                {
+                    Id = 1,
+                    Name = "wefgh"
+                });
+            }
+
             using (UnitOfWork<MasterContext> uow = new UnitOfWork<MasterContext>("Id",long.Parse("1")))
             {
                 var repo = uow.GetRepository<ClassModel>();

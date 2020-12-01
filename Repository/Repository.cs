@@ -33,6 +33,14 @@ namespace DMicroservices.DataAccess.Repository
             DbSet.Add(entity);
         }
 
+        public void BulkInsert(List<T> entityList)
+        {
+            foreach (var t in entityList)
+            {
+                DbSet.Add(t);
+            }
+        }
+
         /// <summary>
         /// Aynı kayıt eklememek için objeyi kontrol ederek true veya false dönderir.
         /// </summary>
