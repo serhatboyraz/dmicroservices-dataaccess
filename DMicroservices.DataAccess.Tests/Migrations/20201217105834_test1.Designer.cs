@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DMicroservices.DataAccess.Tests.Migrations
 {
     [DbContext(typeof(MasterContext))]
-    [Migration("20201130115055_Init")]
-    partial class Init
+    [Migration("20201217105834_test1")]
+    partial class test1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,7 +27,19 @@ namespace DMicroservices.DataAccess.Tests.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Classes");
+                    b.ToTable("Class","school");
+                });
+
+            modelBuilder.Entity("DMicroservices.DataAccess.Tests.Models.DocumentModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Document","school");
                 });
 
             modelBuilder.Entity("DMicroservices.DataAccess.Tests.Models.StudentModel", b =>
@@ -45,7 +57,21 @@ namespace DMicroservices.DataAccess.Tests.Migrations
 
                     b.HasIndex("ClassModelId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Student","person");
+                });
+
+            modelBuilder.Entity("DMicroservices.DataAccess.Tests.Models.TeacherModel", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Surname");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teacher","person");
                 });
 
             modelBuilder.Entity("DMicroservices.DataAccess.Tests.Models.StudentModel", b =>

@@ -2,8 +2,8 @@
 
 namespace DMicroservices.DataAccess.Tests.Models
 {
-    [Table("Student", Schema = "person")]
-    public class StudentModel
+    [Table("Teacher", Schema = "person")]
+    public class TeacherModel
     {
         public long Id { get; set; }
 

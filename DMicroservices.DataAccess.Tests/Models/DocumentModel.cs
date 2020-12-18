@@ -2,13 +2,12 @@
 
 namespace DMicroservices.DataAccess.Tests.Models
 {
-    [Table("Student", Schema = "person")]
-    public class StudentModel
+    [Table("Document", Schema = "school")]
+    public class DocumentModel
     {
         public long Id { get; set; }
 
         public string Name { get; set; }
-        public string Surname { get; set; }
 
     }
 }

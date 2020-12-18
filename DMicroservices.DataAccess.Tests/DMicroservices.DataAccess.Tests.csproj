@@ -18,4 +18,8 @@
     <ProjectReference Include="..\DMicroservices.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
