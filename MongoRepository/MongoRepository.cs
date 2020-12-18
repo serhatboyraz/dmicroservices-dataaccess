@@ -16,8 +16,11 @@ namespace DMicroservices.DataAccess.MongoRepository
         private static readonly ReaderWriterLockSlim _databaseLocker = new ReaderWriterLockSlim();
         private static readonly ReaderWriterLockSlim _clientLocker = new ReaderWriterLockSlim();
 
+
         private static Dictionary<string, IMongoDatabase> Databases { get; set; } = new Dictionary<string, IMongoDatabase>();
         private static Dictionary<string, MongoClient> MongoClients { get; set; } = new Dictionary<string, MongoClient>();
+
+        public int CompanyNo { get; set; }
 
         public DatabaseSettings DatabaseSettings { get; set; } = new DatabaseSettings()
         {
@@ -121,6 +124,7 @@ namespace DMicroservices.DataAccess.MongoRepository
             }
             set { database = value; }
         }
+
         public MongoRepository()
         {
             Database = GetDatabase(DatabaseSettings);
@@ -131,7 +135,6 @@ namespace DMicroservices.DataAccess.MongoRepository
 
             CurrentCollection = GetCollection(DatabaseSettings);
         }
-
 
         public MongoRepository(DatabaseSettings dbSettings)
         {
@@ -144,6 +147,12 @@ namespace DMicroservices.DataAccess.MongoRepository
             }
 
             CurrentCollection = GetCollection(DatabaseSettings);
+        }
+
+        public MongoRepository(int companyNo, IDatabaseSettings dbSettings = null)
+        {
+            CompanyNo = companyNo;
+            CurrentCollection = GetCollection(dbSettings);
         }
 
         public void Add(T entity)

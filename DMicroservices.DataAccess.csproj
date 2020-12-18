@@ -6,7 +6,7 @@
     <Company>Detaysoft</Company>
     <RepositoryUrl>https://github.com/serhatboyraz/dmicroservices-dataaccess</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
   </PropertyGroup>
 
   <ItemGroup>

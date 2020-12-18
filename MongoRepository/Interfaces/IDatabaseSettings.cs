@@ -7,5 +7,8 @@
         string DatabaseName { get; set; }
 
         string CollectionName { get; set; }
+
+        int CompanyNo { get; set; }
+
     }
 }
