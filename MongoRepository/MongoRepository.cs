@@ -284,11 +284,43 @@ namespace DMicroservices.DataAccess.MongoRepository
         {
             throw new NotImplementedException();
         }
+
         public IEnumerable<T> Query()
         {
             return CurrentCollection.Find(FilterDefinition<T>.Empty).ToList();
         }
 
+        public bool Truncate()
+        {
+            FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
+            {
+                Builders<T>.Filter.Where(p => true),
+            });
+
+            DeleteResult result = CurrentCollection.DeleteMany(completedFilter);
+            return (result.DeletedCount > 0);
+        }
+
+        public bool BulkDelete(Expression<Func<T, bool>> predicate)
+        {
+            FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
+            {
+                Builders<T>.Filter.Where(predicate),
+            });
+
+            DeleteResult result = CurrentCollection.DeleteMany(completedFilter);
+            return (result.DeletedCount > 0);
+        }
+
+        public bool BulkInsert(List<T> entityList)
+        {
+            if (entityList.Any())
+            {
+                CurrentCollection.InsertMany(entityList);
+                return true;
+            }
+            return false;
+        }
 
     }
 }

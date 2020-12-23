@@ -115,5 +115,12 @@ namespace DMicroservices.DataAccess.MongoRepository.Interfaces
         /// <returns></returns>
         bool Any(Expression<Func<T, bool>> predicate);
 
+
+        bool Truncate();
+
+        bool BulkInsert(List<T> entityList);
+
+        bool BulkDelete(Expression<Func<T, bool>> predicate);
+
     }
 }

@@ -171,6 +171,7 @@ namespace DMicroservices.DataAccess.MongoRepository
                 return false;
             }
         }
+
         public bool Delete(Expression<Func<T, bool>> predicate, bool forceDelete = false)
         {
             FilterDefinition<T> completedFilter = GetFilterDefinition(predicate);
@@ -274,7 +275,6 @@ namespace DMicroservices.DataAccess.MongoRepository
             return CurrentCollection.Find(FilterDefinition<T>.Empty).ToList();
         }
 
-
         private FilterDefinition<T> GetFilterDefinition(Expression<Func<T, bool>> predicate)
         {
             FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
@@ -292,6 +292,47 @@ namespace DMicroservices.DataAccess.MongoRepository
             }
 
             return completedFilter;
+        }
+
+        public bool Truncate()
+        {
+            FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
+            {
+                Builders<T>.Filter.Where(p => p.CompanyNo.Equals(CompanyNo.Value)),
+                Builders<T>.Filter.Where(p => true),
+            });
+
+            DeleteResult result = CurrentCollection.DeleteMany(completedFilter);
+            return (result.DeletedCount > 0);
+        }
+
+        public bool BulkDelete(Expression<Func<T, bool>> predicate)
+        {
+            FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
+            {
+                Builders<T>.Filter.Where(p => p.CompanyNo.Equals(CompanyNo.Value)),
+                Builders<T>.Filter.Where(predicate),
+            });
+
+            DeleteResult result = CurrentCollection.DeleteMany(completedFilter);
+            return (result.DeletedCount > 0);
+        }
+
+        public bool BulkInsert(List<T> entityList)
+        {
+            if (entityList.Any())
+            {
+                for (var i = 0; i < entityList.Count; i++)
+                {
+                    if (CompanyNo.HasValue)
+                    {
+                        entityList[i].CompanyNo = CompanyNo.Value;
+                    }
+                }
+                CurrentCollection.InsertMany(entityList);
+                return true;
+            }
+            return false;
         }
     }
 }
