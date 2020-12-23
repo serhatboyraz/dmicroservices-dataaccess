@@ -10,6 +10,6 @@ namespace DMicroservices.DataAccess.MongoRepository.Settings
 
         public string CollectionName { get; set; }
 
-        public int CompanyNo { get; set; }
+        public int? CompanyNo { get; set; }
     }
 }

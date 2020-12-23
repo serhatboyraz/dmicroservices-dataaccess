@@ -149,7 +149,7 @@ namespace DMicroservices.DataAccess.MongoRepository
             CurrentCollection = GetCollection(DatabaseSettings);
         }
 
-        public FilteredMongoRepository(int companyNo, IDatabaseSettings dbSettings = null)
+        public FilteredMongoRepository(int? companyNo, IDatabaseSettings dbSettings = null)
         {
             CompanyNo = companyNo;
             CurrentCollection = GetCollection(dbSettings);
