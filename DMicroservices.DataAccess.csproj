@@ -6,7 +6,7 @@
     <Company>Detaysoft</Company>
     <RepositoryUrl>https://github.com/serhatboyraz/dmicroservices-dataaccess</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.10</Version>
+    <Version>1.0.12</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,10 +19,11 @@
     <PackageReference Include="DMicroservices.Utils" Version="1.0.6" />
     <PackageReference Include="Elasticsearch.Net" Version="7.10.1" />
     <PackageReference Include="MessagePack" Version="2.2.85" />
-    <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="MongoDB.Bson" Version="2.11.4" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
     <PackageReference Include="NEST" Version="7.10.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
   </ItemGroup>
 
 </Project>

@@ -77,35 +77,35 @@ namespace DMicroservices.DataAccess.MongoRepository.Interfaces
         /// Verilen entityi ekle.
         /// </summary>
         /// <param name="entity"></param>
-        void Add(T entity);
+        bool Add(T entity);
 
         /// <summary>
         /// Verilen entity i güncelle.
         /// </summary>
         /// <param name="entity"></param>
-        void Update(T entity);
+        bool Update(T entity);
 
         /// <summary>
         /// predicate göre veriler düzenlenir.
         /// </summary>
         /// <param name="predicate"></param>
         /// <param name="entity"></param>
-        void Update(Expression<Func<T, bool>> predicate, T entity);
+        bool Update(Expression<Func<T, bool>> predicate, T entity);
 
         /// <summary>
         /// Verilen entityi sil.
         /// </summary>
         /// <param name="entity"></param>
-        void Delete(T entity, bool forceDelete = false);
+        bool Delete(T entity, bool forceDelete = false);
 
         /// <summary>
         /// predicate göre veriler silinir.
         /// </summary>
         /// <param name="predicate"></param>
         /// <param name="forceDelete"></param>
-        void Delete(Expression<Func<T, bool>> predicate, bool forceDelete = false);
+        bool Delete(Expression<Func<T, bool>> predicate, bool forceDelete = false);
 
-        void Delete<TField>(FieldDefinition<T, TField> field, TField date);
+        bool Delete<TField>(FieldDefinition<T, TField> field, TField date);
 
         /// <summary>
         /// Aynı kayıt eklememek için objeyi kontrol ederek true veya false dönderir.

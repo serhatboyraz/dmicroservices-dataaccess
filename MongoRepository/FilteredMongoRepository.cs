@@ -7,11 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using DMicroservices.Utils.Logger;
 
 namespace DMicroservices.DataAccess.MongoRepository
 {
-    public class MongoRepository<T> : IDisposable, IMongoRepository<T> where T : class
+    public class FilteredMongoRepository<T> : IDisposable, IMongoRepository<T> where T : class, IMongoRepositoryCollection
     {
         //All mongodb databases and collections generated from mongoclient and mongoclient itself is threadsafe. because of that caching is logical choice.
         private static readonly ReaderWriterLockSlim _databaseLocker = new ReaderWriterLockSlim();
@@ -20,7 +19,9 @@ namespace DMicroservices.DataAccess.MongoRepository
 
         private static Dictionary<string, IMongoDatabase> Databases { get; set; } = new Dictionary<string, IMongoDatabase>();
         private static Dictionary<string, MongoClient> MongoClients { get; set; } = new Dictionary<string, MongoClient>();
-        
+
+        public int? CompanyNo { get; set; }
+
         public DatabaseSettings DatabaseSettings { get; set; } = new DatabaseSettings()
         {
             CollectionName = typeof(T).Name,
@@ -124,7 +125,7 @@ namespace DMicroservices.DataAccess.MongoRepository
             set { database = value; }
         }
 
-        public MongoRepository()
+        public FilteredMongoRepository()
         {
             Database = GetDatabase(DatabaseSettings);
             if (Database.GetCollection<T>(typeof(T).Name) == null)
@@ -135,7 +136,7 @@ namespace DMicroservices.DataAccess.MongoRepository
             CurrentCollection = GetCollection(DatabaseSettings);
         }
 
-        public MongoRepository(DatabaseSettings dbSettings)
+        public FilteredMongoRepository(DatabaseSettings dbSettings)
         {
             DatabaseSettings = dbSettings;
 
@@ -148,8 +149,9 @@ namespace DMicroservices.DataAccess.MongoRepository
             CurrentCollection = GetCollection(DatabaseSettings);
         }
 
-        public MongoRepository(int companyNo, IDatabaseSettings dbSettings = null)
+        public FilteredMongoRepository(int companyNo, IDatabaseSettings dbSettings = null)
         {
+            CompanyNo = companyNo;
             CurrentCollection = GetCollection(dbSettings);
         }
 
@@ -157,30 +159,23 @@ namespace DMicroservices.DataAccess.MongoRepository
         {
             try
             {
+                if (CompanyNo.HasValue)
+                {
+                    entity.CompanyNo = CompanyNo.Value;
+                }
                 CurrentCollection.InsertOne(entity);
                 return true;
             }
             catch (Exception ex)
             {
-                string messageTemplate = $"Mongo adding error on :{typeof(T).Name}";
-                ElasticLogger.Instance.Error(ex, messageTemplate);
                 return false;
             }
         }
-
         public bool Delete(Expression<Func<T, bool>> predicate, bool forceDelete = false)
         {
-            try
-            {
-                CurrentCollection.DeleteOne(predicate);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                string messageTemplate = $"Mongo deleting error on :{typeof(T).Name}";
-                ElasticLogger.Instance.Error(ex, messageTemplate);
-                return false;
-            }
+            FilterDefinition<T> completedFilter = GetFilterDefinition(predicate);
+            DeleteResult resut = CurrentCollection.DeleteMany(completedFilter);
+            return (resut.DeletedCount > 0);
         }
 
         public bool Delete<TField>(FieldDefinition<T, TField> field, TField date)
@@ -191,27 +186,17 @@ namespace DMicroservices.DataAccess.MongoRepository
                 CurrentCollection.DeleteMany(filter);
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
-                string messageTemplate = $"Mongo delete many error on :{typeof(T).Name}";
-                ElasticLogger.Instance.Error(ex, messageTemplate);
                 return false;
             }
         }
 
         public bool Update(Expression<Func<T, bool>> predicate, T entity)
         {
-            try
-            {
-                CurrentCollection.ReplaceOneAsync(predicate, entity);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                string messageTemplate = $"Mongo upate many error on :{typeof(T).Name}";
-                ElasticLogger.Instance.Error(ex, messageTemplate);
-                return false;
-            }
+            FilterDefinition<T> completedFilter = GetFilterDefinition(predicate);
+            ReplaceOneResult result = CurrentCollection.ReplaceOne(completedFilter, entity);
+            return (result.ModifiedCount > 0);
         }
 
         public int Count(Expression<Func<T, bool>> predicate)
@@ -290,5 +275,23 @@ namespace DMicroservices.DataAccess.MongoRepository
         }
 
 
+        private FilterDefinition<T> GetFilterDefinition(Expression<Func<T, bool>> predicate)
+        {
+            FilterDefinition<T> completedFilter = Builders<T>.Filter.And(new[]
+            {
+                Builders<T>.Filter.Where(predicate),
+            });
+
+            if (CompanyNo.HasValue)
+            {
+                completedFilter = Builders<T>.Filter.And(new[]
+                {
+                    Builders<T>.Filter.Where(predicate),
+                    Builders<T>.Filter.Eq(y => y.CompanyNo, CompanyNo.Value)
+                });
+            }
+
+            return completedFilter;
+        }
     }
 }
