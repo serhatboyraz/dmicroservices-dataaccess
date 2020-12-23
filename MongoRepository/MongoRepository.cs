@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 using DMicroservices.Utils.Logger;
 
 namespace DMicroservices.DataAccess.MongoRepository
@@ -317,6 +318,34 @@ namespace DMicroservices.DataAccess.MongoRepository
             if (entityList.Any())
             {
                 CurrentCollection.InsertMany(entityList);
+                return true;
+            }
+            return false;
+        }
+
+        public bool AddAsync(T entity)
+        {
+            CurrentCollection.InsertOneAsync(entity);
+            return true;
+        }
+
+        public bool UpdateAsync(Expression<Func<T, bool>> predicate, T entity)
+        {
+            Task<ReplaceOneResult> taskResult = CurrentCollection.ReplaceOneAsync(predicate, entity);
+
+            if (taskResult.IsCompleted)
+            {
+                return (taskResult.Result.ModifiedCount > 0);
+            }
+
+            return true;
+        }
+
+        public bool BulkInsertAsync(List<T> entityList)
+        {
+            if (entityList.Any())
+            {
+                CurrentCollection.InsertManyAsync(entityList);
                 return true;
             }
             return false;

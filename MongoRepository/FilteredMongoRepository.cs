@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DMicroservices.DataAccess.MongoRepository
 {
@@ -330,6 +331,47 @@ namespace DMicroservices.DataAccess.MongoRepository
                     }
                 }
                 CurrentCollection.InsertMany(entityList);
+                return true;
+            }
+            return false;
+        }
+
+
+        public bool AddAsync(T entity)
+        {
+            if (CompanyNo.HasValue)
+            {
+                entity.CompanyNo = CompanyNo.Value;
+            }
+            CurrentCollection.InsertOneAsync(entity);
+            return true;
+        }
+
+        public bool UpdateAsync(Expression<Func<T, bool>> predicate, T entity)
+        {
+            FilterDefinition<T> completedFilter = GetFilterDefinition(predicate);
+            Task<ReplaceOneResult> taskResult = CurrentCollection.ReplaceOneAsync(completedFilter, entity);
+
+            if (taskResult.IsCompleted)
+            {
+                return (taskResult.Result.ModifiedCount > 0);
+            }
+
+            return true;
+        }
+
+        public bool BulkInsertAsync(List<T> entityList)
+        {
+            if (entityList.Any())
+            {
+                for (var i = 0; i < entityList.Count; i++)
+                {
+                    if (CompanyNo.HasValue)
+                    {
+                        entityList[i].CompanyNo = CompanyNo.Value;
+                    }
+                }
+                CurrentCollection.InsertManyAsync(entityList);
                 return true;
             }
             return false;
